@@ -2,7 +2,7 @@ export function Footer() {
   return (
     <footer className="border-t border-white/[0.07] px-8 py-16 bg-black">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-end justify-between gap-10">
-        {/* Brand */}
+        {/* Brand name */}
         <div>
           <div
             className="text-[clamp(2.5rem,6vw,5rem)] text-white font-black leading-none tracking-tight"
@@ -16,16 +16,18 @@ export function Footer() {
         </div>
 
         {/* Links */}
-        <div className="flex flex-col items-start md:items-end gap-3 text-[10px] tracking-[0.35em] uppercase">
+        <div className="flex flex-col items-start md:items-end gap-3">
           <a
-            href="https://instagram.com/entourageclo__"
+            href="https://www.instagram.com/entourageclo__/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white/35 hover:text-white transition-colors duration-300"
+            className="text-[10px] tracking-[0.35em] uppercase text-white/35 hover:text-white transition-colors duration-300 underline-offset-4 hover:underline"
           >
             @entourageclo__
           </a>
-          <span className="text-white/18">EST. 2026</span>
+          <span className="text-[10px] tracking-[0.35em] uppercase text-white/18">
+            EST. 2026
+          </span>
         </div>
       </div>
 
