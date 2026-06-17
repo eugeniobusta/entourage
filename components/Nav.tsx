@@ -41,13 +41,18 @@ export function Nav() {
       ref={navRef}
       className="fixed top-0 left-0 right-0 z-[100] px-7 py-4 flex items-center justify-between border-b border-transparent"
     >
-      {/* Left: handle */}
-      <div className="text-[10px] tracking-[0.35em] uppercase text-white/30 hover:text-white/60 transition-colors duration-300">
+      {/* Left: IG handle — links to Instagram */}
+      <a
+        href="https://www.instagram.com/entourageclo__/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-[10px] tracking-[0.35em] uppercase text-white/35 hover:text-white transition-colors duration-300 shrink-0"
+      >
         @entourageclo__
-      </div>
+      </a>
 
       {/* Center: nav links */}
-      <div className="hidden md:flex items-center gap-10 text-[10px] tracking-[0.35em] uppercase text-white/40">
+      <div className="hidden md:flex items-center gap-8 text-[10px] tracking-[0.35em] uppercase text-white/40">
         <button
           onClick={() => scrollTo("brand")}
           className="hover:text-white transition-colors duration-300"
@@ -68,8 +73,10 @@ export function Nav() {
         </button>
       </div>
 
-      {/* Right: brand logo */}
-      <LogoE size={32} />
+      {/* Right: brand E mark */}
+      <div className="shrink-0">
+        <LogoE size={30} />
+      </div>
     </nav>
   );
 }

@@ -1,41 +1,85 @@
 interface LogoEProps {
   size?: number;
   className?: string;
+  /* white on transparent (default) or black on white */
+  inverted?: boolean;
 }
 
-export function LogoE({ size = 36, className = "" }: LogoEProps) {
+/*
+  Faithful recreation of the ENTOURAGE E mark:
+  - Bold italic serif E with high contrast strokes
+  - 4-pointed star (sparkle) embedded in the E's interior
+  SVG paths hand-traced from the brand reference image.
+*/
+export function LogoE({ size = 40, className = "", inverted = false }: LogoEProps) {
+  const fg = inverted ? "#000000" : "#ffffff";
+  const bg = inverted ? "#ffffff" : "transparent";
+
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 100 100"
+      viewBox="0 0 200 220"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      style={{ background: bg, borderRadius: "50%" }}
     >
-      {/* Outer circle */}
-      <circle cx="50" cy="50" r="48" stroke="white" strokeWidth="2.5" />
+      {/*
+        Bold italic serif E
+        Left vertical stroke: thick, italic (skewed ~12°)
+        Three horizontal bars top / middle / bottom
+        Thin terminals on horizontal bars (contrast)
+      */}
 
-      {/* Bold italic E — drawn as path so no font dependency */}
-      {/* Left vertical stroke */}
-      <rect x="22" y="20" width="9" height="60" fill="white" />
-      {/* Top horizontal */}
-      <rect x="22" y="20" width="38" height="9" fill="white" />
-      {/* Middle horizontal */}
-      <rect x="22" y="45" width="30" height="8" fill="white" />
-      {/* Bottom horizontal */}
-      <rect x="22" y="71" width="38" height="9" fill="white" />
+      {/* ── Left vertical stroke (thick, slightly italic lean) ── */}
+      <path
+        d="M 42 28 L 55 28 L 38 192 L 25 192 Z"
+        fill={fg}
+      />
 
-      {/* 4-pointed sparkle star — top right area of the E */}
-      {/* Positioned at approx (58, 24) */}
-      <g transform="translate(62, 22)">
-        {/* vertical arm */}
-        <ellipse cx="0" cy="0" rx="2" ry="9" fill="white" />
-        {/* horizontal arm */}
-        <ellipse cx="0" cy="0" rx="9" ry="2" fill="white" />
-        {/* diagonal arms */}
-        <ellipse cx="0" cy="0" rx="1.3" ry="6.5" fill="white" transform="rotate(45)" />
-        <ellipse cx="0" cy="0" rx="1.3" ry="6.5" fill="white" transform="rotate(-45)" />
+      {/* ── Top horizontal bar ── */}
+      <path
+        d="M 50 28 L 148 28 L 145 47 L 138 55 L 60 55 Z"
+        fill={fg}
+      />
+
+      {/* ── Middle horizontal bar (slightly shorter) ── */}
+      <path
+        d="M 40 100 L 128 100 L 125 117 L 119 124 L 46 124 Z"
+        fill={fg}
+      />
+
+      {/* ── Bottom horizontal bar ── */}
+      <path
+        d="M 30 173 L 152 173 L 150 192 L 143 200 L 33 200 Z"
+        fill={fg}
+      />
+
+      {/*
+        4-pointed sparkle star — sits in the E's counter space
+        (the upper interior space between top bar and middle bar)
+        Thin elongated diamond points crossing at center
+      */}
+      <g transform="translate(105, 82)">
+        {/* Vertical arm */}
+        <path
+          d="M 0 -28 C 3 -8, 3 -8, 0 0 C -3 -8, -3 -8, 0 -28 Z"
+          fill={fg}
+        />
+        <path
+          d="M 0 28 C 3 8, 3 8, 0 0 C -3 8, -3 8, 0 28 Z"
+          fill={fg}
+        />
+        {/* Horizontal arm */}
+        <path
+          d="M -28 0 C -8 3, -8 3, 0 0 C -8 -3, -8 -3, -28 0 Z"
+          fill={fg}
+        />
+        <path
+          d="M 28 0 C 8 3, 8 3, 0 0 C 8 -3, 8 -3, 28 0 Z"
+          fill={fg}
+        />
       </g>
     </svg>
   );

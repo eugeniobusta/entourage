@@ -9,6 +9,7 @@ import { Values } from "@/components/Values";
 import { Quotes } from "@/components/Quotes";
 import { ThePromise } from "@/components/ThePromise";
 import { Drop01 } from "@/components/Drop01";
+import { Portugal } from "@/components/Portugal";
 import { Footer } from "@/components/Footer";
 
 const Loader = dynamic(
@@ -65,6 +66,7 @@ export default function HomePage() {
         <Quotes />
         <ThePromise />
         <Drop01 />
+        <Portugal />
         <Footer />
       </main>
     </>

@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import dynamic from "next/dynamic";
 
-/* Load all 3 scenes client-side only */
 const ParticleField = dynamic(
   () => import("./scenes/ParticleField").then((m) => ({ default: m.ParticleField })),
   { ssr: false }
@@ -22,46 +21,43 @@ type Scene = "particles" | "cloth" | "geometric";
 
 const SCENES: { id: Scene; label: string; desc: string }[] = [
   { id: "particles", label: "01", desc: "COSMOS" },
-  { id: "cloth", label: "02", desc: "SILK" },
-  { id: "geometric", label: "03", desc: "FORM" },
+  { id: "cloth",     label: "02", desc: "SILK"   },
+  { id: "geometric", label: "03", desc: "FORM"   },
 ];
 
 export function Hero() {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
-  const formRef = useRef<HTMLDivElement>(null);
-  const metaRef = useRef<HTMLDivElement>(null);
+  const formRef    = useRef<HTMLDivElement>(null);
+  const metaRef    = useRef<HTMLDivElement>(null);
 
-  const [activeScene, setActiveScene] = useState<Scene>("particles");
-  const [email, setEmail] = useState("");
+  /* Default to cloth — the "covered form" scene */
+  const [activeScene, setActiveScene] = useState<Scene>("cloth");
+  const [email,  setEmail]  = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
     const tl = gsap.timeline({ delay: 0.2 });
-    tl.fromTo(
-      headingRef.current,
+    tl.fromTo(headingRef.current,
       { y: 130, opacity: 0 },
       { y: 0, opacity: 1, duration: 1.3, ease: "power4.out" }
     )
-      .fromTo(
-        taglineRef.current,
-        { y: 25, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: "power3.out" },
-        "-=0.75"
-      )
-      .fromTo(
-        formRef.current,
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" },
-        "-=0.5"
-      )
-      .fromTo(
-        metaRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.8 },
-        "-=0.4"
-      );
+    .fromTo(taglineRef.current,
+      { y: 25, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1, ease: "power3.out" },
+      "-=0.75"
+    )
+    .fromTo(formRef.current,
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" },
+      "-=0.5"
+    )
+    .fromTo(metaRef.current,
+      { opacity: 0 },
+      { opacity: 1, duration: 0.8 },
+      "-=0.4"
+    );
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -75,13 +71,8 @@ export function Hero() {
         body: JSON.stringify({ email: email.trim() }),
       });
       const data = await res.json();
-      if (res.ok) {
-        setStatus("success");
-        setEmail("");
-      } else {
-        setStatus("error");
-        setErrMsg(data.message ?? "Something went wrong.");
-      }
+      if (res.ok) { setStatus("success"); setEmail(""); }
+      else { setStatus("error"); setErrMsg(data.message ?? "Something went wrong."); }
     } catch {
       setStatus("error");
       setErrMsg("Network error. Please try again.");
@@ -91,26 +82,20 @@ export function Hero() {
   return (
     <section className="relative h-screen w-full overflow-hidden flex flex-col items-center justify-center">
       {/* 3D Scene */}
-      {activeScene === "particles" && <ParticleField />}
-      {activeScene === "cloth" && <ClothSim />}
-      {activeScene === "geometric" && <GeometricScene />}
+      {activeScene === "particles"  && <ParticleField />}
+      {activeScene === "cloth"      && <ClothSim />}
+      {activeScene === "geometric"  && <GeometricScene />}
 
-      {/* Very subtle vignette to keep text readable */}
+      {/* Vignette — keeps text legible without killing the 3D */}
       <div
         className="absolute inset-0 z-[1] pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 75% 75% at 50% 50%, transparent 20%, rgba(0,0,0,0.55) 100%)",
+            "radial-gradient(ellipse 80% 80% at 50% 50%, transparent 15%, rgba(0,0,0,0.62) 100%)",
         }}
       />
 
-      {/* Top meta bar */}
-      <div className="absolute top-8 left-8 right-8 flex justify-between text-[10px] tracking-[0.38em] uppercase text-white/30 z-10 pointer-events-none select-none">
-        <span>ENTOURAGE</span>
-        <span>EST. 2026</span>
-      </div>
-
-      {/* Main content */}
+      {/* ── Main content ── */}
       <div className="relative z-10 text-center px-6 select-none">
         <div className="overflow-hidden">
           <h1
@@ -124,39 +109,43 @@ export function Hero() {
 
         <p
           ref={taglineRef}
-          className="mt-6 text-[clamp(0.6rem,1.2vw,0.85rem)] tracking-[0.42em] uppercase text-white/45 font-light"
+          className="mt-5 text-[clamp(0.6rem,1.2vw,0.85rem)] tracking-[0.42em] uppercase text-white/45 font-light"
           style={{ fontFamily: "var(--font-body-google), sans-serif" }}
         >
           A Collective Built Around The Individual
         </p>
 
-        {/* ── Waitlist form — first thing users act on ── */}
+        {/* ── Waitlist — first action above the fold ── */}
         <div ref={formRef} className="mt-10">
           {status !== "success" ? (
             <form onSubmit={handleSubmit} className="flex flex-col items-center gap-3">
+              {/* Label */}
+              <p className="text-[9px] tracking-[0.45em] uppercase text-white/35 mb-1">
+                Drop 01 Waitlist — Late 2026 · 100 Pieces
+              </p>
               <div className="flex w-full max-w-sm border border-white/20 focus-within:border-white/50 transition-colors duration-300">
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="Enter your email"
-                  className="flex-1 bg-transparent px-5 py-3.5 text-white text-sm placeholder:text-white/25 outline-none min-w-0"
+                  placeholder="your@email.com"
+                  className="flex-1 bg-transparent px-5 py-3.5 text-white text-sm placeholder:text-white/22 outline-none min-w-0"
                   style={{ fontFamily: "var(--font-body-google), sans-serif" }}
                 />
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className="px-5 py-3.5 text-[9px] tracking-[0.35em] uppercase text-white/55 hover:text-white hover:bg-white/[0.05] transition-all duration-300 border-l border-white/20 whitespace-nowrap disabled:opacity-40"
+                  className="px-5 py-3.5 text-[9px] tracking-[0.35em] uppercase text-white/50 hover:text-white hover:bg-white/[0.05] transition-all duration-300 border-l border-white/20 whitespace-nowrap disabled:opacity-40"
                 >
-                  {status === "loading" ? "…" : "Join"}
+                  {status === "loading" ? "…" : "Notify Me"}
                 </button>
               </div>
               {status === "error" && (
                 <p className="text-xs text-red-400/70">{errMsg}</p>
               )}
-              <p className="text-[9px] tracking-[0.32em] uppercase text-white/20">
-                Drop 01 · Late 2026 · Limited to 100
+              <p className="text-[8px] tracking-[0.28em] uppercase text-white/18">
+                You'll be the first to know when we drop. No spam.
               </p>
             </form>
           ) : (
@@ -168,36 +157,31 @@ export function Hero() {
                 You&rsquo;re in the circle.
               </p>
               <p className="text-white/35 text-xs tracking-wide mt-1">
-                We&rsquo;ll reach out when Drop 01 is ready.
+                We&rsquo;ll notify you before Drop 01 goes live.
               </p>
             </div>
           )}
         </div>
 
-        {/* N° badge */}
-        <div
-          ref={metaRef}
-          className="mt-8 text-[10px] tracking-[0.32em] uppercase text-white/20"
-        >
-          N° — / 100
+        {/* Limited badge */}
+        <div ref={metaRef} className="mt-6 text-[9px] tracking-[0.32em] uppercase text-white/18">
+          EST. 2026 &nbsp;·&nbsp; N° — / 100
         </div>
       </div>
 
-      {/* ── 3D Scene switcher ── */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-6 z-10">
+      {/* ── Scene switcher ── */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-8 z-10">
         {SCENES.map(({ id, label, desc }) => (
           <button
             key={id}
             onClick={() => setActiveScene(id)}
             className={`flex flex-col items-center gap-1 transition-all duration-300 ${
-              activeScene === id ? "opacity-100" : "opacity-25 hover:opacity-55"
+              activeScene === id ? "opacity-100" : "opacity-22 hover:opacity-55"
             }`}
           >
-            <span className="text-[10px] font-mono text-white tracking-widest">{label}</span>
-            <span className="text-[8px] tracking-[0.38em] uppercase text-white/60">{desc}</span>
-            {activeScene === id && (
-              <span className="w-4 h-px bg-white/60 mt-0.5" />
-            )}
+            <span className="text-[9px] font-mono text-white tracking-widest">{label}</span>
+            <span className="text-[7px] tracking-[0.38em] uppercase text-white/55">{desc}</span>
+            {activeScene === id && <span className="w-4 h-px bg-white/50 mt-0.5" />}
           </button>
         ))}
       </div>
